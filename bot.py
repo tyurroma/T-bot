@@ -14,8 +14,8 @@ def greet_user(bot, update):
 
 def talk_to_me(bot, update):
     user_text = 'Hello {}! You wrote: {}.'.format(update.message.chat.first_name, update.message.text)
-    logging.info('User: %s, Chat id: %s, Message: %s', update.message.chat.username,
-        update.message.chat.id, update.message.text)
+    logging.info('User: {}, Chat id: {}, Message: {}'.format(update.message.chat.username,
+                update.message.chat.id, update.message.text))
     update.message.reply_text(user_text)
 
 def main():
@@ -27,7 +27,8 @@ def main():
     mybot.start_polling()
     mybot.idle()
 
-main()
+if __name__ == '__main__':
+    main()
 
 
 
