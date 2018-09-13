@@ -10,11 +10,11 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
                     )
 
 def greet_user(bot, update):
-    text = 'Hello, {}! With the help of this bot, you can find out' \
+    text = 'Hello, {}! With the help of this bot, you can find out ' \
             'in which constellation the planet is today. ' \
             'Just type the command: /planet <planet name>. ' \
             'Something like this: /planet Mars. ' \
-            'The list of planets are: Mars, Neptune, Pluto, Saturn, Uranus, Venus. '\
+            'The list of planets are: Mars, Neptune, Pluto, Saturn, Uranus, Venus, Jupiter. '\
             'Bot can also show what you wrote.' \
             .format(update.message.chat.first_name)
     logging.info(text)
@@ -22,7 +22,7 @@ def greet_user(bot, update):
     update.message.reply_text(instruction)
 
 def planet(bot, update, args):
-    planets = ('Mars', 'Neptune', 'Pluto', 'Saturn', 'Uranus', 'Venus')
+    planets = ('Mars', 'Neptune', 'Pluto', 'Saturn', 'Uranus', 'Venus', 'Jupiter')
     date_today = d.datetime.today()
     planet_name = ' '.join(args)
     logging.info(planet_name)
@@ -45,6 +45,9 @@ def planet(bot, update, args):
         elif planet_name == 'Venus':
             planet_name = ephem.Venus(date_today)
             update.message.reply_text(ephem.constellation(planet_name)[1])
+        elif planet_name == 'Jupiter':
+            planet_name = ephem.Jupiter(date_today)
+            update.message.reply_text(ephem.constellation(planet_name)[1])    
         else:
             update.message.reply_text('No data')
     except IndexError:
