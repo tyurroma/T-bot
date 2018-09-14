@@ -22,7 +22,6 @@ def greet_user(bot, update):
     update.message.reply_text(instruction)
 
 def planet(bot, update, args):
-    planets = ('Mars', 'Neptune', 'Pluto', 'Saturn', 'Uranus', 'Venus', 'Jupiter')
     date_today = d.datetime.today()
     planet_name = ' '.join(args)
     logging.info(planet_name)
