@@ -3,6 +3,7 @@ import ephem
 from glob import glob
 import logging
 from random import choice
+import re
 
 from emoji import emojize
 from telegram import ReplyKeyboardMarkup, KeyboardButton
@@ -30,31 +31,30 @@ def greet_user(bot, update, user_data):
     logging.info(text)
     update.message.reply_text(text, reply_markup=get_keyboard())
 
-def planet(bot, update, args, user_data):
-    smile = get_user_smile(user_data)
+def planet(bot, update, args):
     date_today = d.datetime.today()
     planet_name = ' '.join(args)
-    logging.info(planet_name)
+    planet_name = planet_name.lower()
     try: 
-        if planet_name == 'Mars':
+        if planet_name == 'mars':
             planet_name = ephem.Mars(date_today)
             update.message.reply_text(ephem.constellation(planet_name)[1])
-        elif planet_name == 'Neptune':
+        elif planet_name == 'neptune':
             planet_name = ephem.Neptune(date_today)
             update.message.reply_text(ephem.constellation(planet_name)[1])    
-        elif planet_name == 'Pluto':
+        elif planet_name == 'pluto':
             planet_name = ephem.Pluto(date_today)
             update.message.reply_text(ephem.constellation(planet_name)[1])
-        elif planet_name == 'Saturn':
+        elif planet_name == 'saturn':
             planet_name = ephem.Saturn(date_today)
             update.message.reply_text(ephem.constellation(planet_name)[1])
-        elif planet_name == 'Uranus':
+        elif planet_name == 'uranus':
             planet_name = ephem.Uranus(date_today)
             update.message.reply_text(ephem.constellation(planet_name)[1])
-        elif planet_name == 'Venus':
+        elif planet_name == 'venus':
             planet_name = ephem.Venus(date_today)
             update.message.reply_text(ephem.constellation(planet_name)[1])
-        elif planet_name == 'Jupiter':
+        elif planet_name == 'jupiter':
             planet_name = ephem.Jupiter(date_today)
             update.message.reply_text(ephem.constellation(planet_name)[1])    
         else:
@@ -109,6 +109,18 @@ def get_keyboard():
                                     )
     return my_keyboard
 
+def wordcount(bot, update, args):
+    words = ' '.join(args)
+    words = re.sub('[«»"!@#$:;.,?]', '', words)
+    words = words.split()
+
+    while len(words) != 0:
+        update.message.reply_text('Words in your phrase: {}'.format(len(words)), reply_markup=get_keyboard())
+        logging.info()
+        break
+    else:
+        update.message.reply_text('Enter some words, please!', reply_markup=get_keyboard())
+
 def main():
     mybot = Updater(settings.API_KEY, request_kwargs=settings.PROXY)
     logging.info('Bot is starting')
@@ -116,6 +128,7 @@ def main():
     dp.add_handler(CommandHandler('start', greet_user, pass_user_data=True))
     dp.add_handler(CommandHandler('planet', planet, pass_args=True))
     dp.add_handler(CommandHandler('cat', send_cat_picture, pass_user_data=True))
+    dp.add_handler(CommandHandler('wordcount', wordcount, pass_args=True))
     dp.add_handler(RegexHandler('^(Send cat)$', send_cat_picture, pass_user_data=True))
     dp.add_handler(RegexHandler('^(Change avatar)$', change_avatar, pass_user_data=True))
     dp.add_handler(MessageHandler(Filters.contact, get_contact, pass_user_data=True))
@@ -123,6 +136,7 @@ def main():
     dp.add_handler(MessageHandler(Filters.text, talk_to_me, pass_user_data=True))
     mybot.start_polling()
     mybot.idle()
+
 
 if __name__ == '__main__':
     main()
